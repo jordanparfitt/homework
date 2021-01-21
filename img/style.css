@@ -1,0 +1,40 @@
+html {
+  padding: 10;
+  margin: 10;
+  height: 100%;
+  width: 100%;
+}
+
+body {
+  padding: 10;
+  margin: 10;
+  height: 100%;
+  width: 100%;
+  background-image: url("./img/background.png");
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+  background-size: cover;
+  width: 100%;
+  overflow-x: hidden;
+}
+
+img {
+  padding: 10px;
+}
+
+.collection-row {
+  padding-bottom: 10px;
+  float: left;
+  height: 300px;
+  width: 100%;
+  white-space: nowrap;
+
+  position: relative;
+  overflow-x: hidden;
+  overflow-y: hidden;
+  -webkit-overflow-scrolling: touch;
+}
+
+.highlighted-image {
+  border: 5px solid #555;
+}
