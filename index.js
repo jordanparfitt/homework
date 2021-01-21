@@ -1,3 +1,5 @@
+var allRows = [];
+
 function load() {
   fetch("https://cd-static.bamgrid.com/dp-117731241344/home.json")
     .then((response) => {
@@ -42,6 +44,7 @@ function load() {
 }
 
 function createCollectionRow(set) {
+  var newRow = [];
   var collectionDiv = document.createElement("div");
   //todo: give the row an id
   //collectionDiv.setAttribute("id", "div" + containerIndex);
@@ -49,10 +52,11 @@ function createCollectionRow(set) {
 
   set.items.map((item) => {
     var img = createImage(item);
-    img.className = "thumbnail-image";
+    newRow.push(img.id);
     collectionDiv.appendChild(img);
   });
   document.getElementById("body").appendChild(collectionDiv);
+  allRows.push(newRow);
 }
 
 function createHeadingLabel(text) {
@@ -66,18 +70,64 @@ function createHeadingLabel(text) {
 function createImage(item) {
   var image178 = item.image.tile["1.78"];
   var url = "";
+  var masterId = "";
   if (image178.series) {
     url = image178.series.default.url;
+    masterId = image178.series.default.masterId;
   } else if (image178.program) {
     url = image178.program.default.url;
+    masterId = image178.program.default.masterId;
   } else if (image178.default) {
     url = image178.default.default.url;
+    masterId = image178.default.default.masterId;
   } else {
     alert(JSON.stringify(image178));
   }
   if (url) {
     var img = document.createElement("img");
+    img.id = masterId;
     img.src = url;
+
+    img.onerror = (err) => {
+      img.src = "./img/blank.png";
+    };
+
     return img;
   }
+}
+
+document.onkeydown = checkKey;
+
+var currentVert = null;
+var currentHorizontal = null;
+function checkKey(e) {
+  e = e || window.event;
+  if (currentHorizontal != null && currentVert != null) {
+    if (e.keyCode == "38") {
+      // up arrow
+      if (currentVert > 0) currentVert--;
+    } else if (e.keyCode == "40") {
+      // down arrow
+      if (currentVert < allRows.length - 1) currentVert++;
+    } else if (e.keyCode == "37") {
+      // left arrow
+      if (currentHorizontal > 0) currentHorizontal--;
+    } else if (e.keyCode == "39") {
+      // right arrow
+      if (currentHorizontal < allRows[currentVert].length - 1)
+        currentHorizontal++;
+    }
+  } else {
+    currentVert = 0;
+    currentHorizontal = 0;
+  }
+
+  [].forEach.call(document.querySelectorAll("img"), function (img) {
+    img.className = "";
+  });
+  var targetImage = document.getElementById(
+    allRows[currentVert][currentHorizontal]
+  );
+  targetImage.className = "highlighted-image";
+  targetImage.scrollIntoView();
 }
