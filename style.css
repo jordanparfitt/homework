@@ -1,0 +1,29 @@
+html {
+  padding: 10;
+  margin: 10;
+  height: 100%;
+  width: 100%;
+}
+
+body {
+  padding: 10;
+  margin: 10;
+  height: 100%;
+  width: 100%;
+  background-image: url("./img/background.png");
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+  background-size: cover;
+  width: 100%;
+}
+
+.thumbnail-image {
+  padding: 10px;
+}
+
+.collection-row {
+  padding-bottom: 10px;
+  float: left;
+  height: 300px;
+  white-space: nowrap;
+}
