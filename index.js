@@ -1,6 +1,6 @@
-var allRows = [];
-
 function load() {
+  var masterData = new DataCollection();
+  var addtionalUrls = [];
   fetch("https://cd-static.bamgrid.com/dp-117731241344/home.json")
     .then((response) => {
       return response.json();
@@ -9,50 +9,64 @@ function load() {
       data.data.StandardCollection.containers.map(
         (container, containerIndex) => {
           if (container.set.items) {
-            //map items
-            createHeadingLabel(container.set.text);
-            createCollectionRow(container.set, containerIndex);
+            masterData.addRow(container.set);
           } else if (container.set.refId) {
-            fetch(
-              "https://cd-static.bamgrid.com/dp-117731241344/sets/" +
-                container.set.refId +
-                ".json"
-            )
-              .then((response) => {
-                return response.json();
-              })
-              .then((response) => {
-                if (response.data.CuratedSet) {
-                  createHeadingLabel(response.data.CuratedSet.text);
-                  createCollectionRow(response.data.CuratedSet, containerIndex);
-                } else if (response.data.PersonalizedCuratedSet) {
-                  createHeadingLabel(response.data.PersonalizedCuratedSet.text);
-                  createCollectionRow(
-                    response.data.PersonalizedCuratedSet,
-                    containerIndex
-                  );
-                } else if (response.data.TrendingSet) {
-                  createHeadingLabel(response.data.TrendingSet.text);
-                  createCollectionRow(response.data.TrendingSet),
-                    containerIndex;
-                } else {
-                  alert("theres another one");
-                }
-              })
-              .then((nav = new Nav(document.getElementById(allRows[0][0]))));
-          } else {
-            alert("something is wrong");
+            addtionalUrls.push(
+              fetch(
+                "https://cd-static.bamgrid.com/dp-117731241344/sets/" +
+                  container.set.refId +
+                  ".json"
+              )
+            );
           }
         }
       );
+    })
+    .then(() => {
+      Promise.all(addtionalUrls)
+        .then(function (responses) {
+          return Promise.all(
+            responses.map(function (response) {
+              return response.json();
+            })
+          );
+        })
+        .then(function (dynamicRefSets) {
+          dynamicRefSets.map((set) => {
+            masterData.addRow(findItemsInSet(set.data));
+          });
+        })
+        .then(function () {
+          masterData.getRows().map((container) => {
+            createHeadingLabel(container.text);
+            createCollectionRow(container);
+          });
+
+          nav = new Nav(
+            document.getElementById(
+              "imageContainer"
+            ).childNodes[1].childNodes[0]
+          );
+        })
+        .catch(function (error) {
+          console.log(error);
+        });
     });
+}
+
+function findItemsInSet(data) {
+  if (data.CuratedSet) {
+    return data.CuratedSet;
+  } else if (data.PersonalizedCuratedSet) {
+    return data.PersonalizedCuratedSet;
+  } else if (data.TrendingSet) {
+    return data.TrendingSet;
+  }
 }
 
 function createCollectionRow(set, containerIndex) {
   var newRow = [];
   var collectionDiv = document.createElement("div");
-  //todo: give the row an id
-  //collectionDiv.setAttribute("id", "div" + containerIndex);
   collectionDiv.className = "collection-row";
 
   set.items.map((item, itemIndex) => {
@@ -62,7 +76,6 @@ function createCollectionRow(set, containerIndex) {
   });
 
   document.getElementById("imageContainer").appendChild(collectionDiv);
-  allRows.push(newRow);
 }
 
 function createHeadingLabel(text) {

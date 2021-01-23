@@ -56,7 +56,8 @@ class Nav {
         block: "center",
         inline: "center",
       });
-      if (scrollDirection === "horz") {
+    }
+    if (scrollDirection === "horz") {
       this.activeTarget.scrollIntoView({
         behavior: "smooth",
         block: "nearest",
