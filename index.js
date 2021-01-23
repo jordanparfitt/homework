@@ -59,9 +59,6 @@ function createCollectionRow(set, containerIndex) {
     newRow.push(img.id);
     collectionDiv.appendChild(img);
   });
-  var img = document.createElement("img");
-  img.src = "./img/blank.png";
-  collectionDiv.appendChild(img);
 
   document.getElementById("imageContainer").appendChild(collectionDiv);
   allRows.push(newRow);
@@ -104,162 +101,60 @@ function createImage(item, containerIndex, itemIndex) {
   }
 }
 
-// document.onkeydown = checkKey;
-// var currentVert = null;
-// var currentHorizontal = null;
-// function checkKey(e) {
-//   if (!keyActive) {
-//     keyActive = true;
-//     e = e || window.event;
-//     if (currentHorizontal != null && currentVert != null) {
-//       if (e.keyCode == "38") {
-//         // up arrow
-//         if (currentVert > 0) currentVert--;
-//       } else if (e.keyCode == "40") {
-//         // down arrow
-//         if (currentVert < allRows.length - 1) currentVert++;
-//       } else if (e.keyCode == "37") {
-//         // left arrow
-//         if (currentHorizontal > 0) currentHorizontal--;
-//       } else if (e.keyCode == "39") {
-//         // right arrow
-//         if (currentHorizontal < allRows[currentVert].length - 1)
-//           currentHorizontal++;
-//       }
-//     } else {
-//       currentVert = 0;
-//       currentHorizontal = 0;
-//     }
-
-//     [].forEach.call(document.querySelectorAll("img"), function (img) {
-//       img.className = "";
-//     });
-//     var targetImage = document.getElementById(
-//       allRows[currentVert][currentHorizontal]
-//     );
-//     targetImage.className = "highlighted-image";
-
-//     var rect = targetImage.getBoundingClientRect();
-//     if (rect.x + 360 > screen.width) {
-//       targetImage.parentElement.scroll({
-//         left: targetImage.parentElement.scrollLeft + 360,
-//         behavior: "smooth",
-//       });
-//     }
-//     if (rect.x < 100) {
-//       targetImage.parentElement.scroll({
-//         left: targetImage.parentElement.scrollLeft - 360,
-//         behavior: "smooth",
-//       });
-//     }
-//   }
-// }
-
 document.onkeydown = checkKey;
 var targetImage;
 function checkKey(e) {
-  e = e || window.event;
+  var newTargetImage;
+  var scrollDirection;
   if (targetImage) {
     if (e.keyCode == "38") {
       //up
       var rect = targetImage.getBoundingClientRect();
-      targetImage = document.elementFromPoint(
-        rect.x + 10,
-        rect.y - rect.height
-      );
+      newTargetImage = document.elementFromPoint(rect.x + 10, rect.y - 75);
+      scrollDirection = "vert";
     } else if (e.keyCode == "40") {
       //down
       var rect = targetImage.getBoundingClientRect();
-      targetImage = document.elementFromPoint(
+      newTargetImage = document.elementFromPoint(
         rect.x + 10,
         rect.y + rect.height + 75
       );
+      scrollDirection = "vert";
     } else if (e.keyCode == "37") {
       // left arrow
       if (targetImage.previousSibling) {
+        newTargetImage = targetImage.previousSibling;
+        scrollDirection = "horz";
       }
-      targetImage = targetImage.previousSibling;
     } else if (e.keyCode == "39") {
       // right arrow
-      if (
-        targetImage.nextElementSibling &&
-        !targetImage.nextElementSibling.src.includes("blank")
-      )
-        targetImage = targetImage.nextElementSibling;
+      if (targetImage.nextElementSibling) {
+        newTargetImage = targetImage.nextElementSibling;
+        scrollDirection = "horz";
+      }
     }
   } else {
-    targetImage = document.getElementById(allRows[0][0]);
+    newTargetImage = document.getElementById(allRows[0][0]);
   }
 
-  [].forEach.call(document.querySelectorAll("img"), function (img) {
-    img.className = "";
-  });
-  targetImage.className = "highlighted-image";
-
-  //scroll
-  scroll();
+  if (newTargetImage && newTargetImage.tagName === "IMG") {
+    [].forEach.call(document.querySelectorAll("img"), function (img) {
+      img.className = "";
+    });
+    newTargetImage.className = "highlighted-image";
+    targetImage = newTargetImage;
+    if (scrollDirection === "vert") {
+      targetImage.scrollIntoView({
+        behavior: "smooth",
+        block: "center",
+        inline: "center",
+      });
+    } else {
+      targetImage.scrollIntoView({
+        behavior: "smooth",
+        block: "nearest",
+        inline: "center",
+      });
+    }
+  }
 }
-
-function scroll() {
-  var rect = targetImage.getBoundingClientRect();
-  if (rect.x + 360 > screen.width) {
-    targetImage.parentElement.scroll({
-      left: targetImage.parentElement.scrollLeft + 360,
-      behavior: "smooth",
-    });
-  }
-  if (rect.x < 100) {
-    targetImage.parentElement.scroll({
-      left: targetImage.parentElement.scrollLeft - 360,
-      behavior: "smooth",
-    });
-  }
-  if (rect.y)
-    targetImage.parentElement.parentElement.scroll({
-      top: targetImage.parentElement.parentElement.scrollTop + 360,
-      behavior: "smooth",
-    });
-  targetImage.parentElement.scrollIntoView({
-    behavior: "smooth",
-    block: "center",
-    inline: "nearest",
-  });
-}
-
-// var targetImage;
-
-// function checkKey(e) {
-//   if (!targetImage) {
-//     targetImage = document.getElementById(allRows[0][0]);
-//   } else {
-//     var rect = targetImage.getBoundingClientRect();
-//     e = e || window.event;
-//     if (e.keyCode == "38") {
-//       //up
-//       targetImage = document.elementFromPoint(
-//         rect.x,
-//         rect.y - rect.height - 75
-//       );
-//     } else if (e.keyCode == "40") {
-//       //down
-//       targetImage = document.elementFromPoint(
-//         rect.x,
-//         rect.y + rect.height + 75
-//       );
-//     } else if (e.keyCode == "37") {
-//     } else if (e.keyCode == "39") {
-//     }
-//   }
-
-//   if (targetImage) {
-//     [].forEach.call(document.querySelectorAll("img"), function (img) {
-//       img.className = "";
-//     });
-//     targetImage.className = "highlighted-image-gray";
-//     targetImage.scrollIntoView({
-//       block: "end",
-//       inline: "center",
-//       behavior: "smooth",
-//     });
-//   }
-// }

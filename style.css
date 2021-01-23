@@ -25,11 +25,8 @@ img {
   height: 200px;
   width: 100%;
   white-space: nowrap;
-  position: relative;
   overflow-x: hidden;
   overflow-y: hidden;
-  -webkit-overflow-scrolling: touch;
-  margin-right: 360px;
 }
 
 label {
@@ -64,6 +61,6 @@ nav {
 }
 
 img {
-  width: 20%;
+  width: 300px;
   height: auto;
 }
