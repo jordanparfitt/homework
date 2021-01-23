@@ -38,7 +38,8 @@ function load() {
                 } else {
                   alert("theres another one");
                 }
-              });
+              })
+              .then((nav = new Nav(document.getElementById(allRows[0][0]))));
           } else {
             alert("something is wrong");
           }
@@ -102,59 +103,21 @@ function createImage(item, containerIndex, itemIndex) {
 }
 
 document.onkeydown = checkKey;
-var targetImage;
+var nav;
 function checkKey(e) {
-  var newTargetImage;
-  var scrollDirection;
-  if (targetImage) {
-    if (e.keyCode == "38") {
-      //up
-      var rect = targetImage.getBoundingClientRect();
-      newTargetImage = document.elementFromPoint(rect.x + 10, rect.y - 75);
-      scrollDirection = "vert";
-    } else if (e.keyCode == "40") {
-      //down
-      var rect = targetImage.getBoundingClientRect();
-      newTargetImage = document.elementFromPoint(
-        rect.x + 10,
-        rect.y + rect.height + 75
-      );
-      scrollDirection = "vert";
-    } else if (e.keyCode == "37") {
-      // left arrow
-      if (targetImage.previousSibling) {
-        newTargetImage = targetImage.previousSibling;
-        scrollDirection = "horz";
-      }
-    } else if (e.keyCode == "39") {
-      // right arrow
-      if (targetImage.nextElementSibling) {
-        newTargetImage = targetImage.nextElementSibling;
-        scrollDirection = "horz";
-      }
-    }
-  } else {
-    newTargetImage = document.getElementById(allRows[0][0]);
-  }
-
-  if (newTargetImage && newTargetImage.tagName === "IMG") {
-    [].forEach.call(document.querySelectorAll("img"), function (img) {
-      img.className = "";
-    });
-    newTargetImage.className = "highlighted-image";
-    targetImage = newTargetImage;
-    if (scrollDirection === "vert") {
-      targetImage.scrollIntoView({
-        behavior: "smooth",
-        block: "center",
-        inline: "center",
-      });
-    } else {
-      targetImage.scrollIntoView({
-        behavior: "smooth",
-        block: "nearest",
-        inline: "center",
-      });
-    }
+  switch (e.keyCode) {
+    case 38:
+      nav.up();
+      break;
+    case 40:
+      nav.down();
+      break;
+    case 37:
+      nav.left();
+      break;
+    case 39:
+      nav.right();
+      break;
+    default:
   }
 }
