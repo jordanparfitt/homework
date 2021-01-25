@@ -48,6 +48,7 @@ function load() {
             createCollectionRow(container, containerIndex);
           });
           //create nav class
+          //TODO: move this/add error handling - if the urls above fail you should still allow the user to navigate
           nav = new Nav(
             document.getElementById(
               "imageContainer"
