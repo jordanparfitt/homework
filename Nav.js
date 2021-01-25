@@ -21,6 +21,7 @@ class Nav {
     if (newTargetImage && newTargetImage.tagName === "IMG") {
       this.setActiveTarget(newTargetImage);
       this.highlightAndScroll("vert");
+      this.setNavLabel();
     }
   }
 
@@ -34,6 +35,7 @@ class Nav {
     if (newTargetImage && newTargetImage.tagName === "IMG") {
       this.setActiveTarget(newTargetImage);
       this.highlightAndScroll("vert");
+      this.setNavLabel();
     }
   }
 
@@ -42,6 +44,7 @@ class Nav {
     if (this.activeTarget.previousSibling) {
       this.setActiveTarget(this.activeTarget.previousSibling);
       this.highlightAndScroll("horz");
+      this.setNavLabel();
     }
   }
 
@@ -49,6 +52,7 @@ class Nav {
     if (this.activeTarget.nextElementSibling) {
       this.setActiveTarget(this.activeTarget.nextElementSibling);
       this.highlightAndScroll("horz");
+      this.setNavLabel();
     }
   }
 
@@ -74,26 +78,10 @@ class Nav {
 
   enter() {
     var idArray = this.activeTarget.id.split("-");
-    var activeItemJson = masterData.rows[idArray[1]].items[idArray[2]];
-
-    if (activeItemJson.type === "DmcVideo") {
-      if (activeItemJson.image.tile["0.75"]) {
-        document.getElementById("previewImage").src =
-          activeItemJson.image.tile["0.75"].program.default.url;
-      } else {
-        document.getElementById("previewImage").src =
-          activeItemJson.image.tile["1.00"].program.default.url;
-      }
-    }
-    if (activeItemJson.type === "DmcSeries") {
-      document.getElementById("previewImage").src =
-        activeItemJson.image.tile["0.75"].series.default.url;
-    }
-    if (activeItemJson.type === "StandardCollection") {
-      document.getElementById("previewImage").src =
-        activeItemJson.image.tile["1.78"].default.default.url;
-    }
-
+    document.getElementById("modalImage").src = masterData.getBestImage(
+      idArray[1],
+      idArray[2]
+    );
     document.getElementById("previewModal").style.display = "block";
   }
 
@@ -102,7 +90,6 @@ class Nav {
       img.className = "";
     });
     this.activeTarget.className = "highlighted-image";
-    this.setNavLabel();
     if (scrollDirection === "vert") {
       this.activeTarget.scrollIntoView({
         behavior: "smooth",
