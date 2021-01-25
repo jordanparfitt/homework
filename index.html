@@ -9,13 +9,21 @@
     <title>Homework</title>
 
     <link rel="stylesheet" href="style.css" />
+    <script src="DataCollection.js"></script>
+    <script src="Nav.js"></script>
     <script src="index.js"></script>
-    <script src="navigation.js"></script>
-    <script src="DataObject.js"></script>
   </head>
 
   <body id="body" onload="load()">
-    <nav role="main"></nav>
+    <nav role="main"><label id="currentSelectionLabel"></label></nav>
     <div id="imageContainer"></div>
+
+    <!-- The Modal -->
+    <div id="previewModal" class="modal">
+      <!-- Modal content -->
+      <div class="preview-content">
+        <img id="previewImage"></img>
+      </div>
+    </div>
   </body>
 </html>
