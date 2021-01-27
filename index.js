@@ -1,3 +1,6 @@
+input DataCollection from "DataCollection.js"
+input Nav from "Nav.js"
+
 var masterData = new DataCollection();
 
 function load() {
