@@ -2,8 +2,6 @@ import { DataCollection } from "./DataCollection.js"
 import { Nav } from "./Nav.js"
 
 var masterData = new DataCollection();
-
-function load() {
   var addtionalUrls = [];
   //first search
   fetch("https://cd-static.bamgrid.com/dp-117731241344/home.json")
@@ -62,7 +60,6 @@ function load() {
           console.log(error);
         });
     });
-}
 
 function findItemsInSet(data) {
   if (data.CuratedSet) {
