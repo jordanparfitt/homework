@@ -130,19 +130,19 @@ function checkKey(e) {
   } else {
     switch (e.keyCode) {
       case 38:
-        nav.up();
+        nav.up(masterData);
         break;
       case 40:
-        nav.down();
+        nav.down(masterData);
         break;
       case 37:
-        nav.left();
+        nav.left(masterData);
         break;
       case 39:
-        nav.right();
+        nav.right(masterData);
         break;
       case 13:
-        nav.enter();
+        nav.enter(masterData);
         break;
       default:
     }
