@@ -2,64 +2,63 @@ import { DataCollection } from "./DataCollection.js"
 import { Nav } from "./Nav.js"
 
 var masterData = new DataCollection();
-  var addtionalUrls = [];
-  //first search
-  fetch("https://cd-static.bamgrid.com/dp-117731241344/home.json")
-    .then((response) => {
-      return response.json();
+var addtionalUrls = [];
+//first search
+fetch("https://cd-static.bamgrid.com/dp-117731241344/home.json")
+.then((response) => {
+  return response.json();
+})
+.then((data) => {
+  data.data.StandardCollection.containers.map((container) => {
+    //add standard collections to the masterData
+    if (container.set.items) {
+      masterData.addRow(container.set);
+    } else if (container.set.refId) {
+      //add the dynamic sets to an array for a new promise
+      addtionalUrls.push(
+        fetch(
+          "https://cd-static.bamgrid.com/dp-117731241344/sets/" +
+            container.set.refId +
+            ".json"
+        )
+      );
+    }
+  });
+})
+.then(() => {
+  //get dynamicRefSets
+  Promise.all(addtionalUrls)
+    .then(function (responses) {
+      return Promise.all(
+        responses.map(function (response) {
+          return response.json();
+        })
+      );
     })
-    .then((data) => {
-      //
-      data.data.StandardCollection.containers.map((container) => {
-        //add standard collections to the masterData
-        if (container.set.items) {
-          masterData.addRow(container.set);
-        } else if (container.set.refId) {
-          //add the dynamic sets to an array for a new promise
-          addtionalUrls.push(
-            fetch(
-              "https://cd-static.bamgrid.com/dp-117731241344/sets/" +
-                container.set.refId +
-                ".json"
-            )
-          );
-        }
+    .then(function (dynamicRefSets) {
+      //add dynamicRefSets to masterData
+      dynamicRefSets.map((set) => {
+        masterData.addRow(findItemsInSet(set.data));
       });
     })
-    .then(() => {
-      //get dynamicRefSets
-      Promise.all(addtionalUrls)
-        .then(function (responses) {
-          return Promise.all(
-            responses.map(function (response) {
-              return response.json();
-            })
-          );
-        })
-        .then(function (dynamicRefSets) {
-          //add dynamicRefSets to masterData
-          dynamicRefSets.map((set) => {
-            masterData.addRow(findItemsInSet(set.data));
-          });
-        })
-        .then(function () {
-          //loop through master data and create UI
-          masterData.getRows().map((container, containerIndex) => {
-            createHeadingLabel(container.text);
-            createCollectionRow(container, containerIndex);
-          });
-          //create nav class
-          //TODO: move this/add error handling - if the urls above fail you should still allow the user to navigate
-          nav = new Nav(
-            document.getElementById(
-              "imageContainer"
-            ).childNodes[1].childNodes[0]
-          );
-        })
-        .catch(function (error) {
-          console.log(error);
-        });
+    .then(function () {
+      //loop through master data and create UI
+      masterData.getRows().map((container, containerIndex) => {
+        createHeadingLabel(container.text);
+        createCollectionRow(container, containerIndex);
+      });
+      //create nav class
+      //TODO: move this/add error handling - if the urls above fail you should still allow the user to navigate
+      nav = new Nav(
+        document.getElementById(
+          "imageContainer"
+        ).childNodes[1].childNodes[0]
+      );
+    })
+    .catch(function (error) {
+      console.log(error);
     });
+});
 
 function findItemsInSet(data) {
   if (data.CuratedSet) {
