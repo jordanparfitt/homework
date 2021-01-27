@@ -72,13 +72,11 @@ function findItemsInSet(data) {
 }
 
 function createCollectionRow(set, containerIndex) {
-  var newRow = [];
   var collectionDiv = document.createElement("div");
   collectionDiv.className = "collection-row";
 
   set.items.map((item, itemIndex) => {
     var img = createImage(item, containerIndex, itemIndex);
-    newRow.push(img.id);
     collectionDiv.appendChild(img);
   });
 
