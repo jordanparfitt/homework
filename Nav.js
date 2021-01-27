@@ -1,4 +1,4 @@
-class Nav {
+export class Nav {
   constructor(target) {
     this.activeTarget = target;
     this.activeTarget.className = "highlighted-image";
