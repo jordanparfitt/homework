@@ -8,6 +8,7 @@ export class Nav {
 
   setActiveTarget(newTargetImage) {
     this.activeTarget = newTargetImage;
+    this.activeTarget.className = "highlighted-image";
   }
 
   up() {
