@@ -2,6 +2,7 @@ import { DataCollection } from "./DataCollection.js"
 import { Nav } from "./Nav.js"
 
 var masterData = new DataCollection();
+var nav;
 var addtionalUrls = [];
 //first search
 fetch("https://cd-static.bamgrid.com/dp-117731241344/home.json")
@@ -121,7 +122,6 @@ function createImage(item, containerIndex, itemIndex) {
 }
 
 document.onkeydown = checkKey;
-var nav;
 function checkKey(e) {
   //any key closes modal
   if (document.getElementById("previewModal").style.display === "block") {
