@@ -1,8 +1,5 @@
 export class Nav {
-  constructor(target) {
-    this.activeTarget = target;
-    this.activeTarget.className = "highlighted-image";
-    this.setNavLabel();
+  constructor() {
   }
 
   getActiveTarget(newTargetImage) {
