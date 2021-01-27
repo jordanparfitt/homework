@@ -1,4 +1,3 @@
-"use strict";
 class Nav {
   constructor(target) {
     this.activeTarget = target;
