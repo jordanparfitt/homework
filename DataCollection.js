@@ -1,4 +1,3 @@
-"use strict";
 class DataCollection {
   constructor() {
     this.rows = [];
