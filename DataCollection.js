@@ -1,4 +1,4 @@
-class DataCollection {
+export class DataCollection {
   constructor() {
     this.rows = [];
   }
