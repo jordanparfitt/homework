@@ -2,7 +2,7 @@ import { DataCollection } from "./DataCollection.js"
 import { Nav } from "./Nav.js"
 
 var masterData = new DataCollection();
-var nav;
+var nav = new Nav();
 var addtionalUrls = [];
 //first search
 fetch("https://cd-static.bamgrid.com/dp-117731241344/home.json")
@@ -50,7 +50,7 @@ fetch("https://cd-static.bamgrid.com/dp-117731241344/home.json")
       });
       //create nav class
       //TODO: move this/add error handling - if the urls above fail you should still allow the user to navigate
-      nav = new Nav(
+      nav.setActiveTarget(
         document.getElementById(
           "imageContainer"
         ).childNodes[1].childNodes[0]
