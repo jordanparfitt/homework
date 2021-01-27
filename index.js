@@ -1,5 +1,5 @@
-import DataCollection from "./DataCollection.js"
-import Nav from "./Nav.js"
+import { DataCollection } from "./DataCollection.js"
+import { Nav } from "./Nav.js"
 
 var masterData = new DataCollection();
 
